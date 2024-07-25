@@ -3,12 +3,15 @@ package automationFramework;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
+import com.api.tests.Emp;
+
 import implementation.Employer_Impl;
 import io.cucumber.java.Before;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import modelsPack.EmployerData_Pojo;
 
 public class Employer_Test {
 
@@ -32,6 +35,23 @@ public class Employer_Test {
 //    Send /post request with Json body and validate response contains relevant data : - Question requirement is not clear.
 //    The link given for referring to the question doesn't indicate any information for the response data or the 
 //    parameters to be passed as part of headers.
+    
+    @Test
+    public void testCreateEmp() {
+    	EmployerData_Pojo Emp = EmployerData_Pojo.builder()
+                .name("Boss")
+                .email("Boss@example.com")
+                .age(30)
+                .build();
+
+        Response response = Employer_Impl.createEmpPostRequest(requestSpec, Emp);
+        response.then()
+                .statusCode(201)
+                .body("name", is(Emp.getName()))
+                .body("email", is(Emp.getEmail()))
+                .body("age", is(Emp.getAge()));
+    }
+
 
     @Test
     public void testGetEmpsDelayed() {
